@@ -1,0 +1,499 @@
+Create database PtoVentaBeta1
+
+	Create table Empleados (
+		Empleado_ID int primary key not null,
+		NombreEmpl nvarchar(20) not null,
+		ApellidoEmpl nvarchar(20) not null,
+		Edad int not null,
+		ColoniaEmpl nvarchar (30) not null,
+		MunicipioEmpl nvarchar (30) not null,
+		EstadoEmpl nvarchar (30) not null,
+		PaisEmpl nvarchar (20) not null,
+		Email nvarchar (20) not null,
+		EstadoCivil nvarchar (10) not null,
+		Puesto_ID int not null,
+		Constraint FK_Puesto foreign key (Puesto_ID) references Puestos (Puesto_ID)
+	)
+
+	Create table Puestos (
+		Puesto_ID int not null primary key,
+		NombrePuesto nvarchar (20) not null,
+		Turno smallint not null,
+		HoraEntrada int not null,
+		HoraSalida int not null,
+		-- Horario as (HoraEntrada + ' - ' + HoraSalida),
+		PagoXHora int not null,
+		Sueldo int not null
+	)
+
+	Create table Sucursal (
+		Sucursal_ID int primary key not null,
+		CalleSuc nvarchar (30) not null,
+		NumSuc int not null,
+		ColoniaSuc nvarchar (20) not null,
+		MunicipioSuc nvarchar (20) not null,
+		EstadoSuc nvarchar (20) not null,
+		PaisSuc nvarchar (10) not null,
+		HoraApertura int not null,
+		HoraCerrado int not null,
+		--Horario as (HoraApertura + ' - ' + HoraCerrado),
+		CodigoPostal int not null,
+		Almacen_ID int not null,
+		Constraint FK_Almacen Foreign key (Almacen_ID) references Almacen (Almacen_ID)
+	)
+
+	Create table Almacen (
+		Almacen_ID int primary key not null,
+		Producto_ID int not null,
+		Cantidad bigint not null,
+		Constraint FK_Producto Foreign key (Producto_ID) references Producto (Producto_ID)
+	)
+
+	Create table Producto (
+		Producto_ID int primary key not null,
+		Nombre nvarchar (30) not null,
+		Precio int not null,
+		Proovedor_ID int not null,
+		Constraint FK_Proovedor Foreign key (Proovedor_ID) references Proovedor (Proovedor_ID)
+	)
+
+	Create table Proovedor (
+		Proovedor_ID int primary key not null,
+		NombreProo nvarchar (20) not null,
+		MunicipioProo nvarchar (10) not null,
+		EstadoProo nvarchar (10) not null,
+		PaisProo nvarchar (10) not null
+	)
+
+	Create table DetalleProducto (
+		Detalle_ID int primary key not null,
+		Producto_ID int not null,
+		Proovedor_ID int not null,
+		Cantidad int not null,
+		UnidadMedida nvarchar (10) not null,
+		Constraint FK_Producto Foreign key (Producto_ID) references Producto (Producto_ID),
+		Constraint FK_Proovedor Foreign key (Proovedor_ID) references Proovedor (Proovedor_ID)
+	)
+
+	Create table Pago (
+		Pago_ID int primary key not null,
+		Producto_ID int not null,
+		Cantidad int not null,
+		Total int not null,
+		Pago int not null,
+		--Cambio as (Pago - Total),
+		FormaPago nvarchar (10) not null,
+		Tarjeta_ID int,
+		Constraint FK_Producto Foreign key (Producto_ID) references Producto (Producto_ID)
+	)
+
+	Alter table Pago add Constraint FK_Tarjeta Foreign Key (Tarjeta_ID) references Tarjeta (Tarjeta_ID)
+
+	Create table Tarjeta (
+		Tarjeta_ID int primary key not null,
+		Tipo nvarchar (10) not null,
+		NombreTarjeta nvarchar (10) not null
+	)
+
+	Create table Ticket (
+		Ticket_ID int primary key not null,
+		Empleado_ID int not null,
+		Sucursal_ID int not null,
+		Producto_ID int not null,
+		Pago_ID int not null,
+		Fecha datetime not null,
+		Constraint FK_Empleado Foreign key (Empleado_ID) references Empleados (Empleado_ID),
+		Constraint FK_Sucursal Foreign key (Sucursal_ID) references Sucursal (Sucursal_ID),
+		Constraint FK_Producto Foreign key (Producto_ID) references Producto (Producto_ID),
+		Constraint FK_Pago Foreign key (Pago_ID) references Pago (Pago_ID)
+	)
+	
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(1, 'Jorge', 'Fernadez', 25, 'Vistas del Rio', 'San Nicolas', 'Nuevo Leon', 'México', 'JorgeFdz@gmail.com', 'casado', 1)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(2, 'Monica', 'Castillo', 23, 'San Jose', 'Guadalupe', 'Nuevo Leon', 'México', 'Monic@gmail.com', 'casado', 2)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(3, 'Fatima', 'Gonzales', 26, 'Hidalgo', 'Apodaca', 'Nuevo Leon', 'México', 'FatGon@gmail.com', 'casado', 3)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(4, 'Rodrigo', 'Perez', 22, 'Mazatlan', 'San Nicolas', 'Nuevo Leon', 'México', 'Rodri@gmail.com', 'soltero', 4)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(5, 'Roberto', 'Borjes', 30, 'Azteca', 'Monterrey', 'Nuevo Leon', 'México', 'Robeet@gmail.com', 'casado', 5)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(6, 'Carol', 'Fernadez', 20, 'Fomerrey', 'Monterrey', 'Nuevo Leon', 'México', 'Carol@gmail.com', 'soltera', 6)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(7, 'Kevin', 'Montes', 25, 'Huajuco', 'Saltillo', 'Coahuila', 'México', 'Kev@gmail.com', 'casado', 7)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(8, 'Gonzalo', 'Mendez', 24, 'Guanjo', 'Apodaca', 'Nuevo Leon', 'México', 'Gonza@hotmail.com', 'casado', 8)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(9, 'Irma', 'Rojas', 24, 'San Ignacio', 'Abasolo', 'Coahuila', 'México', 'IrmaRoj@gmail.com', 'casado', 9)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(10, 'Gabriela', 'Monsivais', 31, 'Tlaloc', 'Toluca', 'Edo. de México', 'México', 'GabiMons@gmail.com', 'soltero', 10)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(11, 'Carlos', 'Gallardo', 28, 'Cemento', 'Apodaca', 'Nuevo Leon', 'México', 'CarGall@gmail.com', 'soltero', 6)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(12, 'Jorge', 'Jerez', 24, 'Azul', 'Juan Rafael', 'Edo. de México', 'México', 'George@gmail.com', 'soltero', 7)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(13, 'Alberta', 'Hernandez', 29, 'Quinta Avenida', 'Gral. Coss', 'Nuevo Leon', 'México', 'Alberta@hotmail.com', 'casado', 2)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(14, 'Mona', 'Juarez', 25, '5 de mayo', 'Monterrey', 'Nuevo Leon', 'México', 'MonaJu@hotmail.com', 'soltero', 5)
+	Insert into Empleados (Empleado_ID, NombreEmpl, ApellidoEmpl, Edad, ColoniaEmpl, MunicipioEmpl, EstadoEmpl, PaisEmpl, 
+	Email, EstadoCivil, Puesto_ID) values
+	(15, 'Mario', 'Marquez', 38, '32 de Septiembre', 'San Pedro', 'Nuevo Leon', 'México', 'MariMar@hotmail.com', 'casado', 1)
+
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(1, 'Cajero', 1, 0600, 1400, 50, 400)
+
+	Delete from Puestos where Puesto_ID = 1
+
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(1, 'Cajero', 1, 0600, 1400, 50, 400)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(2, 'Conserje', 1, 0600, 1400, 40, 320)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(3, 'Despachador', 1, 0600, 1400, 50, 400)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(4, 'Guardia', 1, 0600, 1400, 60, 480)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(5, 'Organizador', 1, 0600, 1400, 50, 400)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(6, 'Cajero', 2, 1400, 2200, 50, 400)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(7, 'Conserje', 2, 1400, 2200, 40, 320)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(8, 'Despachador', 2, 1400, 2200, 50, 400)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(9, 'Guardia', 2, 1400, 2200, 60, 480)
+	Insert into Puestos (Puesto_ID, NombrePuesto, Turno, HoraEntrada, HoraSalida, PagoXHora, Sueldo) Values
+	(10, 'Organizador', 2, 1400, 2200, 50, 400)
+
+
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values 
+	(1, 'Gonzalitos', 2500, 'Bolchevique', 'Guadalupe', 'Nuevo Leon', 'México', 0630, 2030, 36500, 1)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(2, 'Lazaro Cardenas', 4508, 'Aztlan', 'San Nicolas', 'Nuevo Leon', 'México', 0630, 2030, 37850, 2)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(3, 'Diaz Ordaz', 3580, 'Lomas de Tolteca', 'Guadalupe', 'Nuevo Leon', 'México', 0630, 2030, 38500, 3)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(4, 'Gomez Morin', 1450, 'Cristo Rey', 'San Pedro', 'Nuevo Leon', 'México', 0630, 2030, 38000, 4)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(5, 'Anaya', 2870, 'Jardinez Hidalgo', 'Apodaca', 'Nuevo Leon', 'México', 0630, 2030, 36600, 5)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(6, 'Jesus Omar', 2854, 'Bosques Morin', 'San Nicolas', 'Nuevo Leon', 'México', 0630, 2030, 21458, 6)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(7, 'Angel Miguel', 8456, 'Jonas Gomez', 'Monterrey', 'Nuevo Leon', 'México', 0630, 2030, 63254, 7)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(8, '6 de octubre', 2148, 'Miguel Hidalgo', 'China', 'Nuevo Leon', 'México', 0630, 2030, 56321, 8)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(9, '20 de Abril', 5489, 'San Andreas', 'Gral. Coss', 'Nuevo Leon', 'México', 0630, 2030, 24587, 9)
+	Insert into Sucursal (Sucursal_ID, CalleSuc, NumSuc, ColoniaSuc, MunicipioSuc, EstadoSuc, PaisSuc, HoraApertura,
+	HoraCerrado, CodigoPostal, Almacen_ID) values
+	(10, 'Puebla', 8547, 'Nuevo Repueblo', 'Guadalupe', 'Nuevo Leon', 'México', 0630, 2030, 38965, 10)
+
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(1, 3, 100)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(2, 10, 250)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(3, 5, 200)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(4, 2, 100)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(5, 9, 350)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(6, 1, 250)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(7, 6, 500)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(8, 4, 420)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(9, 7, 120)
+	Insert into Almacen (Almacen_ID, Producto_ID, Cantidad) values
+	(10, 8, 900)
+
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(1, 'Ruffles', 15, 1)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(2, 'Donitas espolvoreadas', 13, 2)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(3, 'Emperador chocolate', 15, 3)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(4, 'Runners', 15, 4)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(5, 'Tartinas', 12, 5)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(6, 'Jugo manzana', 16, 6)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(7, 'Leche entera', 21, 7)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(8, 'Pepsi light', 20, 8)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(9, 'Coca cola zero', 25, 9)
+	Insert Into Producto (Producto_ID, Nombre, Precio, Proovedor_ID) values
+	(10, 'Nerds', 8, 10)
+	
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(1, 'Sabritas', 'Naucalpan', 'Ed.México', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(2, 'Bimbo', 'Monterrey', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(3, 'Gamesa', 'Monterrey', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(4, 'Barcel', 'Guadalupe', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(5, 'Tia Rosa', 'Monterrey', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(6, 'Jumex', 'DF', 'Ed.México', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(7, 'Sello Rojo', 'Apodaca', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(8, 'PepsiCo', 'Apodaca', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(9, 'Coca cola', 'Monterrey', 'Nuevo Leon', 'México')
+	Insert into Proovedor (Proovedor_ID, NombreProo, MunicipioProo, EstadoProo, PaisProo)values
+	(10, 'Wonka', 'Toluca', 'Ed.México', 'México')
+
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(1, 1, 1, 340, 'Gramos')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(2, 2, 2, 210, 'Gramos')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(3, 3, 3, 171, 'Gramos')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(4, 4, 4, 200, 'Gramos')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(5, 5, 5, 98, 'Gramos')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(6, 6, 6, .5, 'litros')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(7, 7, 7, 1, 'litros')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(8, 8, 8, 2, 'litros')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) values
+	(9, 9, 9, 2, 'litros')
+	Insert into DetalleProducto (Detalle_ID, Producto_ID, Proovedor_ID, Cantidad, UnidadMedida) Values
+	(10, 10, 10, 47, 'Gramos')
+
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(1, 2, 1, 13, 20, 'Tarjeta', 2)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(2, 5, 2, 24, 24, 'Tarjeta', 1)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(3, 4, 3, 45, 50, 'Tarjeta', 3)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(4, 3, 1, 15, 20, 'Tarjeta', 5)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(5, 1, 5, 75, 100, 'Tarjeta', 1)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(6, 6, 1, 13, 13, 'Tarjeta', 2)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(7, 7, 3, 63, 63, 'Tarjeta', 1)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(8, 8, 1, 20, 20, 'Tarjeta', 4)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(9, 10, 2, 16, 20, 'Tarjeta',5)
+	Insert Into Pago (Pago_ID, Producto_ID, Cantidad, Total, Pago, FormaPago, Tarjeta_ID) Values
+	(10, 9, 3, 48, 48, 'Tarjeta', 3)
+
+	Insert into Tarjeta (Tarjeta_ID, Tipo, NombreTarjeta) Values
+	(1, 'Credito', 'MasterCard')
+	Insert into Tarjeta (Tarjeta_ID, Tipo, NombreTarjeta) Values
+	(2, 'Credito', 'Scotiabank')
+	Insert into Tarjeta (Tarjeta_ID, Tipo, NombreTarjeta) Values
+	(3, 'Credito', 'Pay-Pal')
+	Insert into Tarjeta (Tarjeta_ID, Tipo, NombreTarjeta) Values
+	(4, 'Debito', 'Visa')
+	Insert into Tarjeta (Tarjeta_ID, Tipo, NombreTarjeta) Values
+	(5, 'Credito', 'AmeExpress')
+
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(1, 2, 5, 2, 2, 11/06/18)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(2, 5, 6, 8, 4, 11/11/17)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(3, 5, 7, 7, 10, 13/08/17)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(4, 9, 2, 2, 1, 14/09/17)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(5, 4, 7, 10, 5, 20/08/18)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(6, 5, 6, 8, 8, 30/11/17)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(7, 1, 1, 5, 6, 24/01/18)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(8, 3, 10, 4, 9, 26/03/17)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(9, 6, 8, 2, 3, 30/05/18)
+	Insert into Ticket (Ticket_ID, Empleado_ID, Sucursal_ID, Producto_ID, Pago_ID, Fecha) Values
+	(10, 5, 6, 1, 7, 03/06/17)
+
+	Update Ticket set Fecha = 11-06-18
+	where Ticket_ID = 1
+	Update Ticket set Fecha = 11-11-17
+	where Ticket_ID = 2
+
+	
+
+	Update Empleados set Edad = 25
+	where NombreEmpl = 'Gonzalo'
+
+	Update Empleados set Edad = 27
+	where NombreEmpl = 'Alberta'
+
+	Update Empleados set Edad = 30
+	where NombreEmpl = 'Mario'
+
+	Update Empleados set Edad = 32
+	where NombreEmpl = 'Mona'
+
+	Update Empleados set Edad = 40
+	where NombreEmpl = 'Jorge'
+
+	Delete from Empleados
+	where NombreEmpl = 'Kevin'
+
+	Delete from Empleados
+	where NombreEmpl = 'Mona'--(Se borro porque solo se usa en esta tabla
+
+	--Delete from Tarjeta
+	--where NombreTarjeta = 'MasterCard' (Se borra primero de las tablas donde puede estar.
+
+	--Delete from Empleados
+	--where NombreEmpl = 'Jorge' (Se borra primero de las tablas donde puede estar
+
+	--Delete form Empleados
+	--where NombreEmpl = 'Fatima'
+
+
+	Select * from Empleados
+
+	Select Empleado_ID, NombreEmpl from Empleados
+
+	Select * from Producto
+	where Nombre like 'Coca%'
+
+	Select * from Empleados
+	order by NombreEmpl
+
+	Select * from Empleados
+	where MunicipioEmpl like 'San Nicolas'
+	order by Empleado_ID
+
+	Select * from Empleados E JOIN Puestos P
+	on E.Puesto_ID = P.Puesto_ID
+	Order by E.NombreEmpl
+
+	Select * from Producto P LEFT JOIN DetalleProducto DP
+	on P.Producto_ID = DP.Producto_ID
+	order by P.Nombre
+
+	Select * from Almacen A RIGHT JOIN Producto P
+	on A.Producto_ID = P.Producto_ID
+	Order by P.Nombre desc
+
+	Select * from Empleados E JOIN Sucursal S
+	on E.MunicipioEmpl = S.MunicipioSuc
+	order by E.NombreEmpl desc
+
+	Select * from Producto P JOIN Proovedor Pr
+	on P.Proovedor_ID = Pr.Proovedor_ID
+
+	Select * from Ticket T RIGHT JOIN Empleados E
+	on T.Empleado_ID = E.Empleado_ID
+
+	Select * from Ticket T LEFT JOIN Sucursal S
+	on T.Sucursal_ID = S.Sucursal_ID
+
+	Select * from DetalleProducto DT JOIN Producto P
+	on DT.Producto_ID = P.Producto_ID
+
+	Select * from Ticket T JOIN Pago P
+	on T.Pago_ID = P.Pago_ID
+
+	
+
+	Select * from Producto
+	Select * from Proovedor
+
+
+	--Select Producto_ID, Nombre
+		--(Select NombreProo from Proovedor
+		--where Proovedor.Proovedor_ID = Producto.Proovedor_ID) as Proovedor
+	--from Producto
+	--order by Producto_ID
+
+
+	Select * from Ticket
+	Select * from Empleados
+	
+	--Select Ticket_ID, Sucursal_ID, Fecha
+		(--select NombreEmpl from Empleados
+		--where Empleados.Empleado_ID = Ticket.Empleado_ID) as Empleado
+	--from Ticket
+
+	--(Subconsulta con join):
+	Select Ticket_ID, Ticket.Empleado_ID, Sucursal_ID as Sucursal, Fecha,
+	Empleados.NombreEmpl as Empleado, Empleados.Empleado_ID
+		
+	from Ticket join Empleados on Ticket.Empleado_ID = Empleados.Empleado_ID
+
+	group by Ticket_ID, Empleados.NombreEmpl, Ticket.Empleado_ID, Sucursal_ID, Fecha, Empleados.Empleado_ID
+
+	--(with):
+	with cteEmpleados (Empleado_ID, NombreEmpl)
+	as (Select Empleado_ID, NombreEmpl from Empleados)
+
+	Select * from cteEmpleados
+
+	Select w.Empleado_ID, w.NombreEmpl from cteEmpleados w
+
+	--(Select Into):
+	Select * into EmpleadosSanNico
+	from Empleados where MunicipioEmpl = 'San Nicolas'
+
+	--(5 vistas):
+	Create view Vista1
+	as
+	Select Empleado_ID, NombreEmpl, Edad from Empleados
+
+	Select * from Vista1
+
+	Create view Vista2
+	as
+	Select NombreEmpl, MuncipioEmpl, EstadoEmpl, PaisEmpl from Empleados
+
+	Create view Vista3
+	as
+	Select Proovedor_ID, NombreProo, EstadoProo from Proovedor
+
+	Create view Vista4
+	as
+	Select Sucursal_ID, CodigoaPostal from Sucursal
+
+	Create view Vista5
+	as
+	Select Tarjeta_ID, Tipo, NombreTarjeta from Tarjeta 
+
+	
